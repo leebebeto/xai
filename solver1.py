@@ -565,12 +565,23 @@ class Solver(object):
 			# Translate images.
 			#x_fake_list = [x_real]
 			#for c_trg in c_trg_list:
+			img_idx = 1
+			img = x_real[img_idx].unsqueeze(0)
+			attr = c_trg_list[0][img_idx]
+			attr = attr.view(1, attr.size(0), 1, 1)
+			attr = attr.repeat(1, 1, img.size(2), img.size(3))
+			x = torch.cat([img, attr], dim = 1)
+			for  module in list(self.G._modules.items())[0][1]:
+				x = module(x)
+			gen_img = x
+			
 			model = self.D
-			input_data = x_real[1].unsqueeze(0)
+			#input_data = gen_img.unsqueeze(0)
+			input_data = gen_img
 			layer_no = 2
 			grad_cam = GradCam(model=model, feature_module=model.main, target_layer_names = [layer_no], use_cuda = True)
 			#grad_cam = GradCam(model=model, feature_module=model, use_cuda = True)
-			target_index = None
+			target_index = c_trg_list[0][img_idx]
 			mask = grad_cam(input_data, target_index)
 			input_data = input_data.squeeze(0)
 			input_data = input_data.permute(1, 2, 0).detach().cpu().numpy()

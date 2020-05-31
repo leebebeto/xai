@@ -21,7 +21,7 @@ class FeatureExtractor():
 		self.gradients.append(grad)
 
 	def __call__(self, x):
-		x.requires_grad = True
+		#x.requires_grad = True
 		outputs = []
 		self.gradients = []
 		for name, module in self.model._modules.items():
@@ -110,14 +110,17 @@ class GradCam:
 			features, output = self.extractor(input.cuda())
 		else:
 			features, output = self.extractor(input)
+		
+		output = self.model.conv2(output)
+		output = output.view(-1,5)
 
 		if index == None:
-			output = self.model.conv2(output)
-			output = output.view(-1,5)
 			index = np.argmax(output.cpu().data.numpy())
 
 		one_hot = np.zeros((1, output.size()[-1]), dtype=np.float32)
-		one_hot[0][index] = 1
+		if type(index) == torch.Tensor:
+			one_flag = torch.where(index == 1)[0]
+			one_hot[0][one_flag.detach().cpu().numpy()] = 1
 		one_hot = torch.from_numpy(one_hot).requires_grad_(True)
 	#	one_hot = Variable(one_hot.data, requires_grad = True)
 		if self.cuda:
