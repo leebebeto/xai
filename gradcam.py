@@ -27,7 +27,8 @@ class FeatureExtractor():
 		for name, module in self.model._modules.items():
 			#x.requires_grad = True
 			x = module(x)
-			x.requires_grad = True
+			#x.requires_grad = True
+
 			if int(name) in self.target_layers:
 				x.register_hook(self.save_gradient)
 				outputs += [x]
@@ -84,9 +85,10 @@ def preprocess_image(img):
 def show_cam_on_image(img, mask):
 	heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)
 	heatmap = np.float32(heatmap) / 255
+	#img = img.detach().cpu().numpy()
 	cam = heatmap + np.float32(img)
 	cam = cam / np.max(cam)
-	cv2.imwrite("cam.jpg", np.uint8(255 * cam))
+	cv2.imwrite("jungsoo.jpg", np.uint8(255 * cam))
 
 
 class GradCam:
@@ -117,31 +119,25 @@ class GradCam:
 		one_hot = np.zeros((1, output.size()[-1]), dtype=np.float32)
 		one_hot[0][index] = 1
 		one_hot = torch.from_numpy(one_hot).requires_grad_(True)
-		import pdb; pdb.set_trace()
 	#	one_hot = Variable(one_hot.data, requires_grad = True)
 		if self.cuda:
 			one_hot = torch.sum(one_hot.cuda() * output)
 		else:
 			one_hot = torch.sum(one_hot * output)
 
-		import pdb; pdb.set_trace()
 		self.feature_module.zero_grad()
 		self.model.zero_grad()
-		import pdb; pdb.set_trace()
 		one_hot.backward(retain_graph=True)
 		grads_val = self.extractor.get_gradients()[-1].cpu().data.numpy()
 
 		target = features[-1]
 		target = target.cpu().data.numpy()[0, :]
-
-		import pdb; pdb.set_trace()
 		weights = np.mean(grads_val, axis=(2, 3))[0, :]
 		cam = np.zeros(target.shape[1:], dtype=np.float32)
 
 		for i, w in enumerate(weights):
 			cam += w * target[i, :, :]
 
-		import pdb; pdb.set_trace()
 		cam = np.maximum(cam, 0)
 		cam = cv2.resize(cam, input.shape[2:])
 		cam = cam - np.min(cam)

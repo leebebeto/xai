@@ -555,25 +555,27 @@ class Solver(object):
 #		for idx in target_layers:
 #			self.G.main[idx].register_forward_hook(get_activation('activation_'+ str(idx)))
 #												   
-		with torch.no_grad():
-			for i, (x_real, c_org) in enumerate(data_loader):
+		#with torch.no_grad():
+		for i, (x_real, c_org) in enumerate(data_loader):
 
-				# Prepare input images and target domain labels.
-				x_real = x_real.to(self.device)
-				c_trg_list = self.create_labels(c_org, self.c_dim, self.dataset, self.selected_attrs)
+			# Prepare input images and target domain labels.
+			x_real = x_real.to(self.device)
+			c_trg_list = self.create_labels(c_org, self.c_dim, self.dataset, self.selected_attrs)
 
-				# Translate images.
-				#x_fake_list = [x_real]
-				#for c_trg in c_trg_list:
-				model = self.D
-				input_data = x_real[0].unsqueeze(0)
-				layer_no = 10
-				grad_cam = GradCam(model=model, feature_module=model.main, target_layer_names = [layer_no], use_cuda = True)
-				#grad_cam = GradCam(model=model, feature_module=model, use_cuda = True)
-				target_index = None
-				mask = grad_cam(input_data, target_index)
-				show_cam_on_image(img, mask)
-
+			# Translate images.
+			#x_fake_list = [x_real]
+			#for c_trg in c_trg_list:
+			model = self.D
+			input_data = x_real[1].unsqueeze(0)
+			layer_no = 2
+			grad_cam = GradCam(model=model, feature_module=model.main, target_layer_names = [layer_no], use_cuda = True)
+			#grad_cam = GradCam(model=model, feature_module=model, use_cuda = True)
+			target_index = None
+			mask = grad_cam(input_data, target_index)
+			input_data = input_data.squeeze(0)
+			input_data = input_data.permute(1, 2, 0).detach().cpu().numpy()
+			show_cam_on_image(input_data, mask)
+			import pdb; pdb.set_trace()
 
 		file_name = os.path.join("./activations", "act.pickle")
 		with open(file_name, 'wb') as file:
