@@ -82,13 +82,23 @@ def preprocess_image(img):
 	return input
 
 
-def show_cam_on_image(img, mask):
+def show_cam_on_image(img, mask, attr_idx, layer_no):
 	heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)
 	heatmap = np.float32(heatmap) / 255
+	#heatmap = torch.tensor(heatmap)
+	cv2.imwrite('viz/heatmap' + str(attr_idx) + '_'+ str(layer_no) +'.png', heatmap * 255)
+	# a = a[..., ::-1]
+	save_image(img, 'viz/image' + str(attr_idx) +'_' + str(layer_no) +'.png', normalize = True)
+	#save_image(heatmap, 'asd.png', normalize = True)
+	
+	
+	# todo: heatmap save only
+	#cv2.cvtColor(im_cv, cv2.COLOR_BGR2RGB)
+	#cv2.imwrite('heatmap.jpg', np.uint8(255* heatmap))
 	#img = img.detach().cpu().numpy()
-	cam = heatmap + np.float32(img)
-	cam = cam / np.max(cam)
-	cv2.imwrite("jungsoo.jpg", np.uint8(255 * cam))
+	#cam = heatmap + np.float32(img)
+	#cam = cam / np.max(cam)
+	#cv2.imwrite("jungsoo.jpg", np.uint8(255 * cam))
 
 
 class GradCam:
@@ -145,7 +155,7 @@ class GradCam:
 		cam = cv2.resize(cam, input.shape[2:])
 		cam = cam - np.min(cam)
 		cam = cam / np.max(cam)
-		return cam
+		return cam, weights
 
 
 class GuidedBackpropReLU(Function):

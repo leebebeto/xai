@@ -567,25 +567,32 @@ class Solver(object):
 			#for c_trg in c_trg_list:
 			img_idx = 1
 			img = x_real[img_idx].unsqueeze(0)
-			attr = c_trg_list[0][img_idx]
-			attr = attr.view(1, attr.size(0), 1, 1)
-			attr = attr.repeat(1, 1, img.size(2), img.size(3))
-			x = torch.cat([img, attr], dim = 1)
-			for  module in list(self.G._modules.items())[0][1]:
-				x = module(x)
-			gen_img = x
+			#attr = c_trg_list[0][img_idx]
+			device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+			for attr_idx in range(5):
+				attr = torch.FloatTensor([0, 0, 1, 0, 0]).to(device)
+				#attr[attr_idx] = 1
+				attr = attr.view(1, attr.size(0), 1, 1)
+				attr = attr.repeat(1, 1, img.size(2), img.size(3))
+				x = torch.cat([img, attr], dim = 1)
+				for  module in list(self.G._modules.items())[0][1]:
+					x = module(x)
+				gen_img = x
 			
-			model = self.D
-			#input_data = gen_img.unsqueeze(0)
-			input_data = gen_img
-			layer_no = 2
-			grad_cam = GradCam(model=model, feature_module=model.main, target_layer_names = [layer_no], use_cuda = True)
-			#grad_cam = GradCam(model=model, feature_module=model, use_cuda = True)
-			target_index = c_trg_list[0][img_idx]
-			mask = grad_cam(input_data, target_index)
-			input_data = input_data.squeeze(0)
-			input_data = input_data.permute(1, 2, 0).detach().cpu().numpy()
-			show_cam_on_image(input_data, mask)
+				model = self.D
+				#input_data = gen_img.unsqueeze(0)
+				input_data = gen_img
+				for layer_no in [0,2,4,6,8,10]:
+					layer_no = 8
+					grad_cam = GradCam(model=model, feature_module=model.main, target_layer_names = [layer_no], use_cuda = True)
+					#grad_cam = GradCam(model=model, feature_module=model, use_cuda = True)
+					#target_index = c_trg_list[0][img_idx]
+					target_index = attr
+					mask, weights = grad_cam(input_data, target_index)
+					import pdb; pdb.set_trace()
+					#input_data = input_data.squeeze(0)
+					#input_data = input_data.permute(1, 2, 0).detach().cpu().numpy()
+					show_cam_on_image(input_data, mask, attr_idx, layer_no)
 			import pdb; pdb.set_trace()
 
 		file_name = os.path.join("./activations", "act.pickle")
