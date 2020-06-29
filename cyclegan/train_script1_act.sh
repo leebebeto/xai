@@ -9,5 +9,5 @@ data_type=$3
 threshold=$4
 
 
-CUDA_VISIBLE_DEVICES=1 python3 train1_act.py --dataroot ./datasets/horse2zebra --name horse_cyclegan --model cycle_gan --gpu_ids -1 --image_A 'n02381460_1038.jpg' --image_B 'n02391049_7851.jpg' --target_layer $target_layer --loss_type $loss_type --data_type $data_type --threshold $threshold
+CUDA_VISIBLE_DEVICES=1 python3 train1_act.py --dataroot ./datasets/horse2zebra --name horse_cyclegan --model cycle_gan --gpu_ids -1 --image_A 'n02381460_707.jpg' --image_B 'n02391049_7851.jpg' --target_layer $target_layer --loss_type $loss_type --data_type $data_type --threshold $threshold
 

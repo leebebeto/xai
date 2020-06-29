@@ -4,7 +4,7 @@
           checkpoints_dir: ./checkpoints                 
            continue_train: False                         
                 crop_size: 256                           
-                data_type: apple                         	[default: horse]
+                data_type: horse                         
                  dataroot: ./datasets/horse2zebra        	[default: None]
              dataset_mode: unaligned                     
                 direction: AtoB                          
@@ -19,8 +19,8 @@
               epoch_count: 1                             
                  gan_mode: lsgan                         
                   gpu_ids: -1                            	[default: 0]
-                  image_A: n07749192_656.jpg             	[default: n02381460_386.jpg]
-                  image_B: n07740461_78.jpg              	[default: n02391049_7851.jpg]
+                  image_A: n02381460_998.jpg             	[default: n02381460_386.jpg]
+                  image_B: n02391049_77.jpg              	[default: n02391049_7851.jpg]
                image_type: A2A                           
                 init_gain: 0.02                          
                 init_type: normal                        
@@ -61,7 +61,7 @@
            serial_batches: False                         
                    suffix:                               
              target_layer: 1                             	[default: 0]
-                threshold: 0.2                           	[default: 0.5]
+                threshold: 0.5                           
          update_html_freq: 1000                          
                   verbose: False                         
 ----------------- End -------------------

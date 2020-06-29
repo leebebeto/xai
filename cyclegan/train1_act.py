@@ -53,7 +53,6 @@ if __name__ == '__main__':
 
 	def off_activation(max_ch):
 		def hook(model, input, output):
-			print('max len', len(max_ch))
 			#for ch in max_ch:
 			#	output[:, ch, :, :] = output[:, ch, :, :].min()
 			output[:, max_ch,:,:] = output.min()

@@ -1,0 +1,18 @@
+Apple2orange
+train_script3.sh -> train2.py 
+    - 각 layer heat map 보기
+    - 첫번쨰 인자: target layer 0, 1, 2, 3, ... 
+    - 두번쨰 인자: cycle로만 하시면 됩니다
+    - 세번쨰 인자: apple 
+
+train_script4.sh -> for문으로 train_script3.sh 실행 
+    - 첫번쨰 인자: target layer 0, 1, 2, 3, ... 
+    - 두번쨰 인자: cycle로만 하시면 됩니다
+    - 세번쨰 인자: apple 
+
+train_script1_act1.sh -> deactivate로 이미지 재생성 
+    - 첫번쨰 인자: target layer 0, 1, 2, 3, ... 
+    - 두번쨰 인자: cycle로만 하시면 됩니다
+    - 세번쨰 인자: apple 
+
+

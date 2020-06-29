@@ -1,7 +1,7 @@
 loss_type=$1
 data_type=$2
 image_type=$3
-for (( c=0; c<=5; c++ ))
+for (( c=0; c<=14; c++ ))
 do
     echo $c
     bash train_script3.sh $c $loss_type $data_type $image_type
