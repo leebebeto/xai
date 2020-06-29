@@ -39,6 +39,11 @@ class TrainOptions(BaseOptions):
         parser.add_argument('--image_B', type=str, default='n02391049_7851.jpg', help='image id of zebra')
         parser.add_argument('--target_layer', type=int, default=0, help='target layer')
         parser.add_argument('--loss_type', type=str, default='both', help='gan, cycle, both')
-    
+        parser.add_argument('--data_type', type=str, default='horse', help='apple, horse')
+        parser.add_argument('--image_type', type=str, default='A2A', help='A2A, A2B')
+        parser.add_argument('--threshold', type=float, default=0.5, help='threshold')
+     
+ 
+ 
         self.isTrain = True
         return parser

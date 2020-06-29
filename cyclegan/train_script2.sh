@@ -1,9 +1,9 @@
 loss_type=$1
-
-for (( c=0; c<=5; c++ ))
+data_type=$2
+for (( c=0; c<=14; c++ ))
 do
     echo $c
-    bash train_script1.sh $c $loss_type
+    bash train_script1.sh $c $loss_type $data_type 
 done
 
 #bash train_script1.sh 0 both

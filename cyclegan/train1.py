@@ -32,6 +32,8 @@ if __name__ == '__main__':
     opt = TrainOptions().parse()   # get training options
     image_a = opt.image_A
     image_b = opt.image_B
+    os.makedirs('gradcam/horse/A2A/'+str(image_a[9:-3]), exist_ok = True)
+    os.makedirs('gradcam/horse/A2B/'+str(image_a[9:-3]), exist_ok = True)
     os.system('rm -r ./datasets/horse2zebra/trainA/*')
     os.system('rm -r ./datasets/horse2zebra/trainB/*')
     os.system('cp ./datasets/horse2zebra/trainA_real/' + str(image_a) + ' ./datasets/horse2zebra/trainA/')
